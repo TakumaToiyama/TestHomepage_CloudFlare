@@ -1,602 +1,356 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>My Minimal Web</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 好きだったら変えてOK（例: "Takuma's Lab" とか） -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>えいめも - ひとり暮らしのメモ帳日記</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-  <style>
-    :root {
-      --bg: #050710;
-      --bg-soft: rgba(10, 12, 25, 0.92);
-      --accent: #6cf3ff;
-      --accent-soft: rgba(108, 243, 255, 0.18);
-      --text-main: #f6f7ff;
-      --text-sub: #a5acc7;
-      --border-soft: rgba(255, 255, 255, 0.08);
-      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.8);
-      --radius-xl: 22px;
-      --radius-pill: 999px;
-      --blur: 20px;
-    }
+        header {
+            background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        .site-subtitle {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
 
-    html, body {
-      height: 100%;
-      scroll-behavior: smooth;
-    }
+        .site-title {
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: 4px;
+        }
 
-    body {
-      font-family: "Rubik", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #1b2550, #050710 45%, #020309 80%);
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-    }
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0;
+        }
 
-    /* 背景の動くグリッドっぽいの */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.22;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-      background-size: 40px 40px;
-      animation: gridShift 28s linear infinite;
-      z-index: -2;
-    }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-    @keyframes gridShift {
-      from {
-        transform: translate3d(0, 0, 0);
-      }
-      to {
-        transform: translate3d(-80px, -40px, 0);
-      }
-    }
+        nav ul li {
+            margin: 0;
+        }
 
-    .bg-gradient-orb {
-      position: fixed;
-      width: 55vmin;
-      height: 55vmin;
-      border-radius: 50%;
-      background: radial-gradient(circle, #5ef2ff, transparent 60%);
-      filter: blur(35px);
-      opacity: 0.28;
-      top: -10vmin;
-      right: -5vmin;
-      mix-blend-mode: screen;
-      z-index: -1;
-    }
+        nav ul li a {
+            display: block;
+            padding: 20px 30px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
 
-    .bg-gradient-orb2 {
-      position: fixed;
-      width: 50vmin;
-      height: 50vmin;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ff5cf7, transparent 65%);
-      filter: blur(38px);
-      opacity: 0.22;
-      bottom: -10vmin;
-      left: -5vmin;
-      mix-blend-mode: screen;
-      z-index: -1;
-    }
+        nav ul li a:hover {
+            background-color: #f0f0f0;
+        }
 
-    /* レイアウト */
-    .page {
-      min-height: 100vh;
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 24px clamp(18px, 4vw, 32px) 64px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
+        .main-content {
+            background-color: white;
+            padding: 30px;
+            border: 3px solid #4fc3f7;
+            border-radius: 4px;
+        }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
 
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      background: radial-gradient(circle at 30% 30%, #ffffff, #6cf3ff 30%, #141a32 72%);
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.12),
-        0 10px 25px rgba(0, 0, 0, 0.7);
-      position: relative;
-      overflow: hidden;
-    }
+        .share-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
 
-    .brand-logo::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-      mix-blend-mode: screen;
-      opacity: 0.8;
-    }
+        .share-btn:hover {
+            opacity: 0.8;
+        }
 
-    .brand-name {
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      color: var(--text-sub);
-    }
+        .btn-x { background-color: #000; }
+        .btn-facebook { background-color: #4267B2; }
+        .btn-line { background-color: #00C300; }
+        .btn-copy { background-color: #666; }
 
-    nav {
-      display: flex;
-      gap: 8px;
-      font-size: 0.85rem;
-      background: linear-gradient(120deg, rgba(20,24,46,0.95), rgba(7,9,22,0.95));
-      border-radius: var(--radius-pill);
-      padding: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(16px);
-    }
+        .section-title {
+            background-color: #e0e0e0;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
 
-    nav a {
-      text-decoration: none;
-      color: var(--text-sub);
-      padding: 7px 14px;
-      border-radius: 999px;
-      position: relative;
-      overflow: hidden;
-      transition: 0.22s ease;
-      white-space: nowrap;
-    }
+        .article-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #fff;
+        }
 
-    nav a span {
-      position: relative;
-      z-index: 1;
-    }
+        .article-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
 
-    nav a::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0 0, #6cf3ff, transparent 65%);
-      opacity: 0;
-      transition: opacity 0.22s ease;
-    }
+        .article-card h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
 
-    nav a:hover {
-      color: var(--text-main);
-      transform: translateY(-1px);
-    }
+        .article-card p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #666;
+        }
 
-    nav a:hover::before {
-      opacity: 1;
-    }
+        .article-label {
+            display: inline-block;
+            background-color: #4fc3f7;
+            color: white;
+            padding: 4px 12px;
+            font-size: 12px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
 
-    nav a.active {
-      background: linear-gradient(120deg, #6cf3ff, #ff82ff);
-      color: #050712;
-      font-weight: 500;
-      box-shadow: 0 0 25px rgba(108, 243, 255, 0.4);
-    }
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
 
-    /* メイン */
-    main {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: clamp(24px, 5vw, 40px);
-      align-items: stretch;
-    }
+        .sidebar-box {
+            background-color: white;
+            border: 3px solid #4fc3f7;
+            border-radius: 4px;
+            padding: 25px;
+        }
 
-    @media (max-width: 800px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav {
-        width: 100%;
-        justify-content: space-between;
-      }
-    }
+        .sidebar-box h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #4fc3f7;
+        }
 
-    .hero {
-      background: linear-gradient(150deg, rgba(15, 20, 45, 0.95), rgba(5, 7, 16, 0.96));
-      border-radius: var(--radius-xl);
-      padding: clamp(20px, 4vw, 26px);
-      border: 1px solid var(--border-soft);
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(var(--blur));
-    }
+        .profile {
+            text-align: center;
+        }
 
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: radial-gradient(circle at 0 0, rgba(108, 243, 255, 0.28), transparent 55%), rgba(7, 10, 23, 0.85);
-      color: var(--text-sub);
-      margin-bottom: 16px;
-    }
+        .profile-label {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
 
-    .hero-tag-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #6cf3ff;
-      box-shadow: 0 0 10px rgba(108, 243, 255, 0.9);
-    }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: block;
+            object-fit: cover;
+        }
 
-    .hero-title {
-      font-size: clamp(1.9rem, 3vw, 2.4rem);
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
+        .profile-name {
+            color: #4fc3f7;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
 
-    .hero-title span.accent {
-      background: linear-gradient(120deg, #6cf3ff, #ff82ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+        .profile-description {
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: left;
+            color: #666;
+        }
 
-    .hero-subtitle {
-      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.86rem;
-      color: var(--text-sub);
-      margin-bottom: 20px;
-    }
+        .home-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
 
-    .hero-text {
-      font-size: 0.95rem;
-      color: var(--text-sub);
-      line-height: 1.7;
-      max-width: 36rem;
-      margin-bottom: 22px;
-    }
+        .recent-post {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
+        .recent-post:last-child {
+            border-bottom: none;
+        }
 
-    .btn-primary, .btn-ghost {
-      border-radius: 999px;
-      font-size: 0.86rem;
-      padding: 8px 16px;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
-      white-space: nowrap;
-    }
+        .recent-post-img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #6cf3ff, #ff82ff);
-      color: #050712;
-      font-weight: 500;
-      box-shadow: 0 12px 28px rgba(108, 243, 255, 0.35);
-    }
+        .recent-post-title {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 45px rgba(108, 243, 255, 0.45);
-    }
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
 
-    .btn-ghost {
-      background: rgba(7, 10, 23, 0.9);
-      color: var(--text-sub);
-      border-color: rgba(255, 255, 255, 0.22);
-    }
+            .share-buttons {
+                flex-direction: column;
+            }
 
-    .btn-ghost:hover {
-      color: var(--text-main);
-      background: rgba(15, 20, 45, 0.95);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7);
-    }
-
-    .hero-footer-note {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      opacity: 0.9;
-    }
-
-    .hero-footer-note span {
-      font-family: "IBM Plex Mono", ui-monospace, monospace;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      color: #6cf3ff;
-    }
-
-    /* サイドカード */
-    .side {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .card {
-      background: radial-gradient(circle at top left, rgba(108, 243, 255, 0.18), transparent 55%), rgba(5, 7, 16, 0.98);
-      border-radius: var(--radius-xl);
-      padding: 16px 16px 18px;
-      border: 1px solid var(--border-soft);
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(var(--blur));
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-
-    .card-title {
-      font-size: 0.86rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--text-sub);
-    }
-
-    .card-pill {
-      font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 0.7rem;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(5, 15, 25, 0.92);
-      border: 1px solid rgba(108, 243, 255, 0.6);
-      color: #6cf3ff;
-    }
-
-    .card-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 0.86rem;
-      color: var(--text-sub);
-    }
-
-    .card-list li {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 7px 8px;
-      border-radius: 12px;
-      background: rgba(11, 13, 30, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .card-list-label {
-      font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 0.75rem;
-      color: #6cf3ff;
-      opacity: 0.9;
-    }
-
-    .card-list-text {
-      font-size: 0.84rem;
-      text-align: right;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .pill {
-      font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 0.72rem;
-      padding: 5px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(5, 10, 20, 0.95);
-      color: var(--text-sub);
-    }
-
-    footer {
-      margin-top: 32px;
-      font-size: 0.78rem;
-      color: var(--text-sub);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: 16px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      text-decoration: none;
-      color: var(--text-sub);
-      font-family: "IBM Plex Mono", ui-monospace, monospace;
-      font-size: 0.72rem;
-      opacity: 0.9;
-    }
-
-    .footer-links a:hover {
-      color: var(--accent);
-    }
-  </style>
+            .share-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-gradient-orb"></div>
-  <div class="bg-gradient-orb2"></div>
-
-  <div class="page">
     <header>
-      <div class="brand">
-        <div class="brand-logo" aria-hidden="true"></div>
-        <div>
-          <div class="brand-name">PERSONAL · WEB</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#top" class="active"><span>Home</span></a>
-        <a href="#about"><span>About</span></a>
-        <a href="#projects"><span>Projects</span></a>
-      </nav>
+        <div class="site-subtitle">ひとり暮らしのメモ帳日記</div>
+        <h1 class="site-title">えいめも</h1>
     </header>
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero-tag">
-          <span class="hero-tag-dot"></span>
-          <span>Now Online · Minimal personal site</span>
-        </div>
+    <nav>
+        <ul>
+            <li><a href="#">ホーム</a></li>
+            <li><a href="#">プライバシーポリシー</a></li>
+            <li><a href="#">お問い合わせフォーム</a></li>
+            <li><a href="#">サイト・管理人紹介</a></li>
+        </ul>
+    </nav>
 
-        <h1 class="hero-title">
-          Hello, this is<br />
-          <span class="accent">a small corner of the internet.</span>
-        </h1>
-
-        <p class="hero-subtitle">
-          // edit this text: introduce yourself, your interests, or what this site is about.
-        </p>
-
-        <p class="hero-text">
-          このページは、あとで好きなように書き換えるためのテンプレートです。<br />
-          自己紹介、メモ、リンク集、作品置き場など、用途は自由。  
-          テキスト部分はそのまま書き換えて使ってください。
-        </p>
-
-        <div class="hero-buttons">
-          <a href="#projects" class="btn-primary">
-            View projects
-          </a>
-          <a href="#about" class="btn-ghost">
-            About this site
-          </a>
-        </div>
-
-        <p class="hero-footer-note">
-          <span>hint</span> · このファイルはただの <code>index.html</code> なので、エディタでそのまま書き換えてOK。
-        </p>
-      </section>
-
-      <aside class="side">
-        <div class="card" id="about">
-          <div class="card-header">
-            <div class="card-title">About</div>
-            <div class="card-pill">editable</div>
-          </div>
-          <ul class="card-list">
-            <li>
-              <div class="card-list-label">Bio</div>
-              <div class="card-list-text">
-                ここに簡単なプロフィールを。<br />
-                例：CS / デザイン / ゲーム開発に興味があります。
-              </div>
-            </li>
-            <li>
-              <div class="card-list-label">Focus</div>
-              <div class="card-list-text">
-                今ハマっていること、勉強していることなど。<br />
-                一言でOK。
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="card" id="projects">
-          <div class="card-header">
-            <div class="card-title">Projects</div>
-            <div class="card-pill">work in progress</div>
-          </div>
-          <div>
-            <p style="font-size:0.83rem; color:var(--text-sub); margin-bottom:8px;">
-              気が向いたらここにリンクや作品を追加していくスペース。
-            </p>
-            <div class="pill-row">
-              <span class="pill">・GitHub リンク</span>
-              <span class="pill">・ポートフォリオ</span>
-              <span class="pill">・ブログ / ノート</span>
+    <div class="container">
+        <main class="main-content">
+            <div class="share-buttons">
+                <button class="share-btn btn-x">𝕏 X</button>
+                <button class="share-btn btn-facebook">f Facebook</button>
+                <button class="share-btn btn-line">LINE</button>
+                <button class="share-btn btn-copy">📋 コピー</button>
             </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Links</div>
-            <div class="card-pill">social</div>
-          </div>
-          <ul class="card-list">
-            <li>
-              <div class="card-list-label">GitHub</div>
-              <div class="card-list-text">
-                <!-- URLを書き換えてOK -->
-                <a href="#" style="color:var(--accent); text-decoration:none;">your-link-here</a>
-              </div>
-            </li>
-            <li>
-              <div class="card-list-label">Contact</div>
-              <div class="card-list-text">
-                メールアドレスやSNSなど。
-              </div>
-            </li>
-          </ul>
-        </div>
-      </aside>
-    </main>
+            <div class="section-title">新着記事</div>
 
-    <footer>
-      <div>© <span id="year"></span> · Your minimal web</div>
-      <div class="footer-links">
-        <a href="#top">[ top ]</a>
-        <a href="#about">[ about ]</a>
-        <a href="#projects">[ projects ]</a>
-      </div>
-    </footer>
-  </div>
+            <article class="article-card">
+                <span class="article-label">ノート</span>
+                <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=400&fit=crop" alt="家電のイラスト">
+                <h2>ひとり暮らしスタートに必要な家電リスト＆選び方は？【ひとり暮らしノート】</h2>
+                <p>皆さんこんにちは！　えいえいと申します。　今回は、「ひとり暮らしを始めるのに必要な家電」について、必要なものをリストアップして、買う時の選び方をまとめました！　引っ越しの準備をする前に、自分は何が必要か、どんな家電が必要かをしっかり把握して...</p>
+            </article>
 
-  <script>
-    // 年号だけ自動で更新されるやつ
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+            <article class="article-card">
+                <span class="article-label">ノート</span>
+                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=400&fit=crop" alt="デスクワークのイメージ">
+                <h2>ひとり暮らしスタートに必要な家具リスト＆選び方！【ひとり暮らしノート】</h2>
+                <p>新生活に必要な家具選びのポイントをまとめました。ベッド、デスク、収納家具など、最低限必要なアイテムと選び方のコツを紹介します...</p>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-box profile">
+                <h3>筆者のプロフィール</h3>
+                <div class="profile-label">この記事を書いた人</div>
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop" alt="プロフィール画像" class="profile-img">
+                <div class="profile-name">えいえい</div>
+                <div class="profile-description">
+                    趣味がぶら、ひとり暮らしにまつわる日記を書いていきたいなと思っています。19歳。
+                </div>
+                <span class="home-icon">🏠</span>
+            </div>
+
+            <div class="sidebar-box">
+                <h3>最近の投稿</h3>
+                <div class="recent-post">
+                    <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=200&h=140&fit=crop" alt="投稿サムネイル" class="recent-post-img">
+                    <div class="recent-post-title">ひとり暮らしスタートに必要な家電リスト＆選び方は？</div>
+                </div>
+                <div class="recent-post">
+                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=200&h=140&fit=crop" alt="投稿サムネイル" class="recent-post-img">
+                    <div class="recent-post-title">ひとり暮らしスタートに必要な家具リスト＆選び方！</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // シェアボタンの機能
+        document.querySelector('.btn-x').addEventListener('click', () => {
+            window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(location.href), '_blank');
+        });
+
+        document.querySelector('.btn-facebook').addEventListener('click', () => {
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(location.href), '_blank');
+        });
+
+        document.querySelector('.btn-line').addEventListener('click', () => {
+            window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(location.href), '_blank');
+        });
+
+        document.querySelector('.btn-copy').addEventListener('click', () => {
+            navigator.clipboard.writeText(location.href).then(() => {
+                alert('URLをコピーしました！');
+            });
+        });
+    </script>
 </body>
 </html>
