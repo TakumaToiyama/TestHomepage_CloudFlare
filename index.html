@@ -34,6 +34,13 @@
             font-size: 42px;
             font-weight: 300;
             letter-spacing: 4px;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+        }
+
+        .site-title:hover {
+            opacity: 0.9;
         }
 
         nav {
@@ -128,6 +135,14 @@
             padding: 20px;
             margin-bottom: 30px;
             background-color: #fff;
+            transition: box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .article-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .article-card img {
@@ -223,6 +238,7 @@
             line-height: 30px;
             margin-top: 15px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .recent-post {
@@ -230,6 +246,13 @@
             gap: 15px;
             padding: 15px 0;
             border-bottom: 1px solid #eee;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .recent-post:hover {
+            background-color: #f9f9f9;
         }
 
         .recent-post:last-child {
@@ -268,15 +291,15 @@
 <body>
     <header>
         <div class="site-subtitle">ひとり暮らしのメモ帳日記</div>
-        <h1 class="site-title">えいめも</h1>
+        <a href="index.html" class="site-title">えいめも</a>
     </header>
 
     <nav>
         <ul>
-            <li><a href="#">ホーム</a></li>
-            <li><a href="#">プライバシーポリシー</a></li>
-            <li><a href="#">お問い合わせフォーム</a></li>
-            <li><a href="#">サイト・管理人紹介</a></li>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="privacy.html">プライバシーポリシー</a></li>
+            <li><a href="contact.html">お問い合わせフォーム</a></li>
+            <li><a href="about.html">サイト・管理人紹介</a></li>
         </ul>
     </nav>
 
@@ -291,19 +314,19 @@
 
             <div class="section-title">新着記事</div>
 
-            <article class="article-card">
+            <a href="articles/article1.html" class="article-card">
                 <span class="article-label">ノート</span>
                 <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=400&fit=crop" alt="家電のイラスト">
                 <h2>ひとり暮らしスタートに必要な家電リスト＆選び方は？【ひとり暮らしノート】</h2>
                 <p>皆さんこんにちは！　えいえいと申します。　今回は、「ひとり暮らしを始めるのに必要な家電」について、必要なものをリストアップして、買う時の選び方をまとめました！　引っ越しの準備をする前に、自分は何が必要か、どんな家電が必要かをしっかり把握して...</p>
-            </article>
+            </a>
 
-            <article class="article-card">
+            <a href="articles/article2.html" class="article-card">
                 <span class="article-label">ノート</span>
                 <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=400&fit=crop" alt="デスクワークのイメージ">
                 <h2>ひとり暮らしスタートに必要な家具リスト＆選び方！【ひとり暮らしノート】</h2>
                 <p>新生活に必要な家具選びのポイントをまとめました。ベッド、デスク、収納家具など、最低限必要なアイテムと選び方のコツを紹介します...</p>
-            </article>
+            </a>
         </main>
 
         <aside class="sidebar">
@@ -315,19 +338,19 @@
                 <div class="profile-description">
                     趣味がぶら、ひとり暮らしにまつわる日記を書いていきたいなと思っています。19歳。
                 </div>
-                <span class="home-icon">🏠</span>
+                <a href="index.html" class="home-icon">🏠</a>
             </div>
 
             <div class="sidebar-box">
                 <h3>最近の投稿</h3>
-                <div class="recent-post">
+                <a href="articles/article1.html" class="recent-post">
                     <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=200&h=140&fit=crop" alt="投稿サムネイル" class="recent-post-img">
                     <div class="recent-post-title">ひとり暮らしスタートに必要な家電リスト＆選び方は？</div>
-                </div>
-                <div class="recent-post">
+                </a>
+                <a href="articles/article2.html" class="recent-post">
                     <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=200&h=140&fit=crop" alt="投稿サムネイル" class="recent-post-img">
                     <div class="recent-post-title">ひとり暮らしスタートに必要な家具リスト＆選び方！</div>
-                </div>
+                </a>
             </div>
         </aside>
     </div>
